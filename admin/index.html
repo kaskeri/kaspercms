@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+    <head>
     <style>
 
         #sivulogo{
@@ -58,15 +59,37 @@
             text-align: center;
         }
     </style>
-
     <script>
-            function handleLoad() {
-                const footerTitle = localStorage.getItem("footerTitle")
-                document.getElementById("footerTitle").innerHTML = footerTitle
 
-            }
-            addEventListener("load", handleLoad)
+        let editFooterHeadingMode = false
+
+        function handleFooterHeadingEdit() {
+            editFooterHeadingMode = !editFooterHeadingMode
+
+                const footerTitleElement = document.getElementById("footerTitle")
+                const footerTitleInputElement = document.getElementById("footerTitleInput")
+
+                if (!editFooterHeadingMode) {
+                    const footerTitle = footerTitleInputElement.value
+                    footerTitleElement.innerHTML = footerTitle
+                    localStorage.setItem("footerTitle", footerTitle)
+                }
+
+                footerTitleElement.hidden = editFooterHeadingMode
+                footerTitleInputElement.hidden = !editFooterHeadingMode
+                document.getElementById("footerTitleButton").innerHTML = editFooterHeadingMode ? "Save" : "Edit"
+
+                }
+                function handleLoad() {
+                    const footerTitle = localStorage.getItem("footerTitle")
+                    document.getElementById("footerTitle").innerHTML = footerTitle
+                    document.getElementById("footerTitleInput").value = footerTitle
+                }
+
+                addEventListener("load", handleLoad)
+            
     </script>
+    </head>
 <body>
 
     <div class="header">
@@ -106,7 +129,11 @@ id="sivulogo">
 
     <div class="footer">
         <div class="footerteksti">
-            <h2 id="footerTitle">BMW COMPANI</h2>
+
+            <h2 id="footerTitle"></h2>
+            <input id="footerTitleInput" hidden>
+            <button id="footerTitleButton" onclick="handleFooterHeadingEdit()">Edit</button>
+
             <p>Lorem ipsum dolor elias on color. Binku Banki solero manki.
                 Sipula pohvelo midrum kohvelo. Banane zidedine zidane kanane. 
                 Muramasa siksakasa lurem us polem kus.
