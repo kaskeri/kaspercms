@@ -3,7 +3,7 @@
     <head>
     <style>
 
-        #sivulogo{
+        #logo{
             margin: 0, 0;
             height: 200px;
             width: 200px;
@@ -87,6 +87,33 @@
                 }
 
                 addEventListener("load", handleLoad)
+
+                        let editHeaderLogoMode = false
+
+        function handleHeaderLogoEdit() {
+            editHeaderLogoMode = !editHeaderLogoMode
+
+                const headerLogoElement = document.getElementById("logo")
+                const headerLogoButtonInputElement = document.getElementById("logoInput")
+
+                if (!editHeaderLogoMode) {
+                    const logo = headerLogoButtonInputElement.value
+                    headerLogoElement.src = logo
+                    localStorage.setItem("logo", logo)
+                }
+
+                headerLogoElement.hidden = editHeaderLogoMode
+                headerLogoButtonInputElement.hidden = !editHeaderLogoMode
+                document.getElementById("logoButton").innerHTML = editHeaderLogoMode ? "Save" : "Edit"
+
+                }
+                function handleLoad() {
+                    const logo = localStorage.getItem("logo")
+                    document.getElementById("logo").src = logo
+                    document.getElementById("logoInput").innerHTML = logo
+                }
+
+                addEventListener("load", handleLoad)
             
     </script>
     </head>
@@ -94,7 +121,9 @@
 
     <div class="header">
 <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/BMW_logo_%28gray%29.svg/1200px-BMW_logo_%28gray%29.svg.png"
-id="sivulogo">
+id="logo">
+<button id="logoButton" onclick="handleHeaderLogoEdit()">Edit</button>
+<input id="logoInput" hidden>
 
     <div class="linkit">
 <a id="linkki" href="#">Home</a>

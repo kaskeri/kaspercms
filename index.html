@@ -2,7 +2,7 @@
 <html>
     <style>
 
-        #sivulogo{
+        #logo{
             margin: 0, 0;
             height: 200px;
             width: 200px;
@@ -66,12 +66,19 @@
 
             }
             addEventListener("load", handleLoad)
+
+            function handleLoad() {
+                const logo = localStorage.getItem("logo")
+                document.getElementById("logo").src = logo
+            }
+
+            addEventListener("load", handleLoad)            
     </script>
 <body>
 
     <div class="header">
 <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/BMW_logo_%28gray%29.svg/1200px-BMW_logo_%28gray%29.svg.png"
-id="sivulogo">
+id="logo">
 
     <div class="linkit">
 <a id="linkki" href="#">Home</a>
