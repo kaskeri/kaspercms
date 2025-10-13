@@ -13,4 +13,5 @@ jobs:
       with:
         server: 194.197.245.5
         username: 23n_2011
-        password: GfVVsRZ)fq]-fiGH
+        password: ${{ secrets.ftp_password }}
+        server-dir: site/
