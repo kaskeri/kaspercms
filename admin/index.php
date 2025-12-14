@@ -1,3 +1,46 @@
+<?php
+
+foreach (parse_ini_file(__DIR__ . '/.env') as $key => $value) {
+    $_ENV[$key] = $value;
+}
+
+$conn = new mysqli(
+    $_ENV["DB_HOST"],
+    $_ENV["DB_USERNAME"],
+    $_ENV["DB_PASSWORD"],
+    $_ENV["DB_NAME"]
+);
+
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+
+// Käsitellään POST
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+
+    $link = trim($_POST["link"] ?? "");
+
+    if ($link !== "") {
+        $sql = "INSERT INTO links (link) VALUES (?)";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("s", $link);
+        $stmt->execute();
+        $stmt->close();
+    }
+
+
+    header("Location: " . $_SERVER["PHP_SELF"] . "?success=1");
+    exit;
+}
+
+
+$sql = "SELECT link FROM links";
+$result = $conn->query($sql);
+?>
+
+
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -46,17 +89,19 @@
             width: 33%;
             padding-left: 10px;
         }
-        .linkit1{
+        .db-link{
             display: flex;
             flex-direction: column;
-            width: 33%;
+            width: 15%;
             text-align: center;
+            padding-top: 2rem;
         }
-        .linkit2{
-            display: flex;
-            flex-direction: column;
-            width: 33%;
-            text-align: center;
+
+        form{
+            margin: 30px;
+            padding: 10px;
+            border: 1px solid black;
+            background-color: whitesmoke;
         }
     </style>
     <script>
@@ -168,16 +213,22 @@ id="logo">
                 Muramasa siksakasa lurem us polem kus.
                 © 2024, BMW COMPANI, all rights reserved
             </p></div>
-            <div class="linkit1">
-                <a id="linkki" href="#">Home</a>
-                <a id="linkki" href="#">Blog</a>
-                <a id="linkki" href="#">About</a>
-            </div>
-            <div class="linkit2">
-                <a id="linkki" href="#">Facebook</a>
-                <a id="linkki" href="#">LinkedIn</a>
-                <a id="linkki" href="#">GitHub</a>
-            </div>
+            <?php
+if ($result->num_rows > 0) {
+  // output data of each row
+while ($row = $result->fetch_assoc()) {
+    echo '<a href="' . $row["link"] . '" class="db-link">' . $row["link"] . '</a><br><br>';
+}
+} else {
+  echo "0 results";
+}
+$conn->close();
+?>
+<form method="POST">
+    <label for="link">Linkki:</label><br>
+    <input type="text" id="link" name="link" required><br><br>
+    <button type="submit">Lähetä</button>
+</form>
         </div>
     </div>
 </body>

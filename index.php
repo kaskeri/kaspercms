@@ -1,3 +1,24 @@
+<?php
+foreach (parse_ini_file(__DIR__ . '/.env') as $key => $value) {
+    $_ENV[$key] = $value;
+}
+
+$conn = new mysqli(
+    $_ENV["DB_HOST"],
+    $_ENV["DB_USERNAME"],
+    $_ENV["DB_PASSWORD"],
+    $_ENV["DB_NAME"]
+);
+
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+
+$sql = "SELECT link FROM links";
+$result = $conn->query($sql);
+?>
+
 <!DOCTYPE html>
 <html>
     <style>
@@ -45,17 +66,12 @@
             width: 33%;
             padding-left: 10px;
         }
-        .linkit1{
+        .db-link{
             display: flex;
             flex-direction: column;
-            width: 33%;
+            width: 15%;
             text-align: center;
-        }
-        .linkit2{
-            display: flex;
-            flex-direction: column;
-            width: 33%;
-            text-align: center;
+            padding-top: 2rem;
         }
     </style>
 
@@ -119,16 +135,17 @@ id="logo">
                 Muramasa siksakasa lurem us polem kus.
                 © 2024, BMW COMPANI, all rights reserved
             </p></div>
-            <div class="linkit1">
-                <a id="linkki" href="#">Home</a>
-                <a id="linkki" href="#">Blog</a>
-                <a id="linkki" href="#">About</a>
-            </div>
-            <div class="linkit2">
-                <a id="linkki" href="#">Facebook</a>
-                <a id="linkki" href="#">LinkedIn</a>
-                <a id="linkki" href="#">GitHub</a>
-            </div>
+      <?php
+if ($result->num_rows > 0) {
+  // output data of each row
+while ($row = $result->fetch_assoc()) {
+    echo '<a href="' . $row["link"] . '" class="db-link">' . $row["link"] . '</a><br><br>';
+}
+} else {
+  echo "0 results";
+}
+$conn->close();
+?>
         </div>
     </div>
 </body>
